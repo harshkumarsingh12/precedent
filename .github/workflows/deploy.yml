@@ -3,8 +3,9 @@ name: deploy
 # Deploys the Forge app. Never runs on pull requests, so code from forks can't reach it.
 #   - every push to main            → development environment (the shared team site)
 #   - tag v* or manual dispatch     → production (the environment judges install from; spec 0010)
-# Needs repository secrets FORGE_EMAIL and FORGE_API_TOKEN (an Atlassian API token of the app owner) and the real
-# app id in manifest.yml (docs/SETUP.md). Until they exist, the job explains what is missing and succeeds.
+# FORGE_EMAIL and FORGE_API_TOKEN (the app owner's Atlassian API token) live in the GitHub Environment `forge`, which
+# only `main` and `v*` tags may use. Workflows on any other branch can't read them, so a pushed branch can't
+# exfiltrate the token (docs/SETUP.md). If they are missing, the job explains what is missing and succeeds.
 
 on:
   push:
@@ -28,6 +29,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: forge
     timeout-minutes: 15
     env:
       FORGE_EMAIL: ${{ secrets.FORGE_EMAIL }}
