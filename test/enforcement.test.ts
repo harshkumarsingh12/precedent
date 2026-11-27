@@ -1,8 +1,8 @@
 import { expect } from "vitest";
-import { ledger } from "./ledger.js";
-import { core } from "../src/core/index.js";
-import { validateTransition } from "../src/guard/validator.js";
-import { owner } from "./fixtures.js";
+import { ledger } from "./ledger";
+import { core } from "../src/core/index";
+import { validateTransition } from "../src/guard/validator";
+import { owner } from "./fixtures";
 
 // Spec 0005: workflow validator and conflict resolution.
 

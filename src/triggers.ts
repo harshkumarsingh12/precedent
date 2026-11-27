@@ -1,4 +1,4 @@
-import { NotImplementedError } from "./shared/errors.js";
+import { NotImplementedError } from "./shared/errors";
 
 /** avi:jira:created:issue and avi:jira:updated:issue: queue a guard job when anything the verdict depends on changed. */
 export async function onIssueEvent(_event: unknown): Promise<void> {

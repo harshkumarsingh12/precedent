@@ -1,5 +1,5 @@
-import type { CoreService } from "./contract.js";
-import { NotImplementedError } from "../shared/errors.js";
+import type { CoreService } from "./contract";
+import { NotImplementedError } from "../shared/errors";
 
 /**
  * The only code that reads or writes decisions and checks. Every surface calls these functions; none reads

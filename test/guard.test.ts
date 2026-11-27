@@ -1,7 +1,7 @@
 import { expect } from "vitest";
-import { ledger } from "./ledger.js";
-import { core } from "../src/core/index.js";
-import { owner } from "./fixtures.js";
+import { ledger } from "./ledger";
+import { core } from "../src/core/index";
+import { owner } from "./fixtures";
 
 // Spec 0004: guard, rule checkers, freshness and coverage.
 

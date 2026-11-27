@@ -1,7 +1,7 @@
 import { expect } from "vitest";
-import { ledger } from "./ledger.js";
-import { core } from "../src/core/index.js";
-import { agent } from "./fixtures.js";
+import { ledger } from "./ledger";
+import { core } from "../src/core/index";
+import { agent } from "./fixtures";
 
 // Spec 0006: Rovo agent, actions, MCP tools and the agent rules export.
 

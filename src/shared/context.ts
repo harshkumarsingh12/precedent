@@ -1,4 +1,4 @@
-import type { Ctx, Origin } from "../core/contract.js";
+import type { Ctx, Origin } from "../core/contract";
 
 /** The shape Forge passes as the second argument to functions. Only the parts we read. */
 export interface ForgeInvocationContext {

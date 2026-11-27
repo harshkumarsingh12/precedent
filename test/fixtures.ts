@@ -1,4 +1,4 @@
-import type { Ctx } from "../src/core/contract.js";
+import type { Ctx } from "../src/core/contract";
 
 export const NOW = 1_796_000_000;
 export const owner: Ctx = { accountId: "acc-owner", origin: "panel", asUser: true, now: NOW };

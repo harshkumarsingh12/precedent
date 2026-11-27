@@ -1,6 +1,6 @@
 import { expect } from "vitest";
-import { ledger } from "./ledger.js";
-import { seedSampleWorkspace } from "../src/seed/index.js";
+import { ledger } from "./ledger";
+import { seedSampleWorkspace } from "../src/seed/index";
 
 // Spec 0010: sample workspace.
 

@@ -1,4 +1,4 @@
-import type { CheckResult, Coverage, Verdict } from "./contract.js";
+import type { CheckResult, Coverage, Verdict } from "./contract";
 
 /**
  * Overall verdict for a target (spec 0004, §10.3 rule 2 plus finding 7):

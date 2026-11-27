@@ -1,4 +1,4 @@
-import type { Owner } from "./team.js";
+import type { Owner } from "./team";
 
 /** A stub that names who to ask and which spec describes the missing behaviour. */
 export class NotImplementedError extends Error {

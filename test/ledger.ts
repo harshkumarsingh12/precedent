@@ -1,5 +1,5 @@
 import { test } from "vitest";
-import type { Milestone, Owner } from "../src/shared/team.js";
+import type { Milestone, Owner } from "../src/shared/team";
 
 /**
  * An acceptance criterion that is not built yet.
