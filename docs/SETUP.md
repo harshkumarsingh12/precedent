@@ -29,8 +29,10 @@ surprises.
 1. ✅ Done 28 Nov: the app is registered in a Developer Space and its id is in `manifest.yml`.
    `forge register` reformats the whole manifest; keep only the id change. Add teammates to the Developer Space so
    they can deploy and read logs.
-2. Add repository secrets `FORGE_EMAIL` and `FORGE_API_TOKEN` (the app owner's). From then on every merge to
-   `main` deploys to the **development** environment; a `v*` tag deploys **production**.
+2. ✅ Done 28 Nov: `FORGE_EMAIL` and `FORGE_API_TOKEN` (the app owner's) are secrets of the GitHub Environment
+   `forge`, which only `main` and `v*` tags may use; there are no repo-level secrets. Every merge to `main` deploys
+   to the **development** environment; a `v*` tag deploys **production**. Teammates never need this token: each
+   uses their own `forge login` and Developer Space membership.
 3. Install on the shared development site: `forge install --site <site>.atlassian.net --product jira`.
 4. Each teammate who should deploy is added as an app contributor in the developer console.
 
