@@ -1,0 +1,44 @@
+name: Task
+description: A piece of planned work with a clear "done when"
+labels: ["type:feat"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [core, ui, rules, ai, agents, permissions, validator, eval, demo, infra]
+    validations:
+      required: true
+  - type: dropdown
+    id: milestone
+    attributes:
+      label: Milestone
+      options:
+        [
+          "M0 Foundations (Nov 29)",
+          "M1 Spike go/no-go (Dec 2)",
+          "M2 Core loop (Dec 9)",
+          "M3 Feature freeze (Dec 14)",
+          "M4 Fresh install (Dec 17)",
+          "M5 Submission (Dec 20)",
+        ]
+    validations:
+      required: true
+  - type: input
+    id: spec
+    attributes:
+      label: Spec
+      placeholder: docs/specs/0004-guard-and-rule-checks.md
+  - type: textarea
+    id: what
+    attributes:
+      label: What
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      description: Testable. "Works" is not testable. Copy it from the spec's acceptance criteria where possible.
+    validations:
+      required: true

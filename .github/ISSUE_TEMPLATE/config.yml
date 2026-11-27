@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Project document (the arbiter)
+    url: https://github.com/harshkumarsingh12/precedent/blob/main/docs/PROJECT.md
+    about: Scope, architecture, review findings, plan and risks.
+  - name: Specs
+    url: https://github.com/harshkumarsingh12/precedent/tree/main/docs/specs
+    about: Read the spec before filing a bug about behaviour.
+  - name: Security issue
+    url: https://github.com/harshkumarsingh12/precedent/security/advisories/new
+    about: Report privately. Do not open a public issue.

@@ -1,0 +1,250 @@
+# Precedent: one Forge app; Jira required, Confluence optional (stretch). Spec: docs/specs/0002, 0006, 0008.
+# Every module the MVP needs is declared from day one (including llm), so a judge's install never shows an
+# upgrade prompt. Syntax marked "verify" is confirmed in the M1 spike; run `bun run manifest:check` and
+# `forge lint` after every change.
+app:
+  # Replaced by `forge register` (docs/SETUP.md). Do not commit someone else's app id.
+  id: ari:cloud:ecosystem::app/00000000-0000-0000-0000-000000000000
+  runtime:
+    name: nodejs22.x
+  # verify: app.rovo metadata fields required for rovo:mcp from 5 January 2027 (spec 0006)
+  storage:
+    entities:
+      - name: decision
+        attributes:
+          status: { type: string }
+          ownerAccountId: { type: string }
+          updatedAt: { type: integer }
+        indexes:
+          - status
+          - name: by-owner-status
+            range: [status]
+            partition: [ownerAccountId]
+          - updatedAt
+      - name: scope-index
+        attributes:
+          scopeKey: { type: string }
+          status: { type: string }
+        indexes:
+          - name: by-scope-status
+            partition: [scopeKey]
+            range: [status]
+      - name: evidence
+        attributes:
+          decisionId: { type: string }
+        indexes:
+          - decisionId
+      - name: check
+        attributes:
+          targetRef: { type: string }
+          resolution: { type: string }
+          decisionId: { type: string }
+        indexes:
+          - name: by-target-resolution
+            partition: [targetRef]
+            range: [resolution]
+          - decisionId
+
+modules:
+  jira:issuePanel:
+    - key: precedent-panel
+      title: Precedent
+      resource: panel-ui
+      render: native
+      resolver:
+        function: resolver
+  jira:issueContext:
+    - key: precedent-badge
+      title: Precedent
+      resource: badge-ui
+      render: native
+      resolver:
+        function: resolver
+  jira:globalPage:
+    - key: precedent-ledger
+      title: Decision ledger
+      resource: ledger-ui
+      render: native
+      resolver:
+        function: resolver
+  jira:adminPage:
+    - key: precedent-setup
+      title: Precedent setup
+      resource: setup-ui
+      render: native
+      resolver:
+        function: resolver
+  jira:workflowValidator:
+    - key: precedent-no-open-conflicts
+      name: No unresolved decision conflicts
+      description: Blocks the transition while Precedent has unresolved conflicts on the work item.
+      function: validate-transition
+      projectTypes: ["company-managed", "team-managed"]
+  trigger:
+    - key: on-issue-created
+      function: on-issue-event
+      events: ["avi:jira:created:issue"]
+    - key: on-issue-updated
+      function: on-issue-event
+      events: ["avi:jira:updated:issue"]
+    - key: on-issue-commented
+      function: on-comment-event
+      events: ["avi:jira:commented:issue"]
+  # verify: consumer syntax and time limits against the async events reference
+  consumer:
+    - key: guard-consumer
+      queue: guard-queue
+      function: guard-consumer
+    - key: capture-consumer
+      queue: capture-queue
+      function: capture-consumer
+  rovo:agent:
+    - key: precedent-agent
+      name: Precedent
+      description: Answers why the team decided something and checks plans against accepted decisions.
+      prompt: resource:agent-prompt;prompt.md
+      conversationStarters:
+        - Why do we route payments through the gateway?
+        - Check this plan against our decisions
+        - Record a decision from this work item
+      actions:
+        - get-decisions
+        - check-proposal
+        - record-decision
+        - explain-decision
+  rovo:mcp:
+    - key: precedent-mcp
+      name: Precedent
+      tools:
+        - get-decisions
+        - check-proposal
+        - record-decision
+        - export-agent-rules
+  action:
+    - key: get-decisions
+      name: Get decisions in scope
+      function: action-get-decisions
+      actionVerb: GET
+      description: Returns the accepted decisions that apply to a project, component or repository. Call this before planning or writing code.
+      inputs:
+        scope:
+          title: Scope
+          type: string
+          required: true
+          description: A Jira project key, component name or repository slug.
+    - key: check-proposal
+      name: Check a proposal against decisions
+      function: action-check-proposal
+      actionVerb: GET
+      description: Checks spec text or a unified diff against the accepted decisions in scope. Returns conflict, ok or inconclusive with both quotes. Advisory; Jira enforces on configured transitions.
+      inputs:
+        scope:
+          title: Scope
+          type: string
+          required: true
+          description: A Jira project key, component name or repository slug.
+        text:
+          title: Text
+          type: string
+          required: false
+          description: Spec or plan text to check.
+        diff:
+          title: Diff
+          type: string
+          required: false
+          description: A unified diff to check.
+    - key: record-decision
+      name: Record a decision
+      function: action-record-decision
+      actionVerb: CREATE
+      description: Records a proposed decision. It becomes binding only after an approver confirms it in Jira.
+      inputs:
+        statement:
+          title: Statement
+          type: string
+          required: true
+          description: One imperative sentence, for example "No customer email addresses in application logs."
+        scope:
+          title: Scope
+          type: string
+          required: true
+          description: A Jira project key, component name or repository slug.
+        rationale:
+          title: Rationale
+          type: string
+          required: false
+          description: Why the team decided this.
+    - key: export-agent-rules
+      name: Export agent rules
+      function: action-export-agent-rules
+      actionVerb: GET
+      description: Returns the approved decisions for a repository as a block between precedent markers, for AGENTS.md or .rovodev/.review-agent.md.
+      inputs:
+        scope:
+          title: Repository
+          type: string
+          required: true
+          description: The repository slug.
+        format:
+          title: Format
+          type: string
+          required: false
+          description: agents_md (default) or rovodev_review.
+    - key: explain-decision
+      name: Explain a decision
+      function: action-explain-decision
+      actionVerb: GET
+      description: Answers why the team decided something, with the decision, its owner, evidence and history.
+      inputs:
+        query:
+          title: Question
+          type: string
+          required: true
+          description: A question or a decision id such as DEC-3.
+  llm:
+    - key: precedent-llm
+      model:
+        - claude
+  function:
+    - key: resolver
+      handler: index.resolver
+    - key: on-issue-event
+      handler: index.onIssueEvent
+    - key: on-comment-event
+      handler: index.onCommentEvent
+    - key: guard-consumer
+      handler: index.guardConsumer
+    - key: capture-consumer
+      handler: index.captureConsumer
+    - key: validate-transition
+      handler: index.validateTransition
+    - key: action-get-decisions
+      handler: index.actionGetDecisions
+    - key: action-check-proposal
+      handler: index.actionCheckProposal
+    - key: action-record-decision
+      handler: index.actionRecordDecision
+    - key: action-export-agent-rules
+      handler: index.actionExportAgentRules
+    - key: action-explain-decision
+      handler: index.actionExplainDecision
+
+resources:
+  - key: panel-ui
+    path: src/frontend/panel/index.tsx
+  - key: badge-ui
+    path: src/frontend/badge/index.tsx
+  - key: ledger-ui
+    path: src/frontend/ledger/index.tsx
+  - key: setup-ui
+    path: src/frontend/setup/index.tsx
+  - key: agent-prompt
+    path: src/agent
+
+permissions:
+  scopes:
+    - read:jira-work
+    - write:jira-work
+    - storage:app
+    # verify in the spike: creating the sample project and components likely needs manage:jira-project
+    # Confluence scopes are added only with stretch items S1 and S2

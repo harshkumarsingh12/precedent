@@ -1,0 +1,3 @@
+[install]
+# Forge bundles from node_modules; a flat (hoisted) tree avoids symlink surprises.
+linker = "hoisted"

@@ -1,0 +1,45 @@
+{
+  "name": "precedent",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Decisions your agents cannot ignore: a Forge app that records team decisions, checks Jira work items and agent plans against them, and blocks work that contradicts one.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "packageManager": "bun@1.4.5",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:ci": "vitest run --reporter=default --reporter=json --outputFile.json=reports/vitest.json",
+    "ledger": "node scripts/ledger.mjs reports/vitest.json",
+    "eval": "bun eval/run.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "manifest:check": "node scripts/check-manifest.mjs",
+    "forge:lint": "forge lint",
+    "forge:deploy": "forge deploy -e development",
+    "github:bootstrap": "node scripts/github/bootstrap.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22",
+    "@types/react": "^18.3.0",
+    "eslint": "^10.16.0",
+    "prettier": "^3.10.1",
+    "typescript": "~6.0.0",
+    "typescript-eslint": "^8.74.0",
+    "vitest": "^5.1.2",
+    "yaml": "^2.9.1"
+  },
+  "dependencies": {
+    "@forge/api": "^8.5.1",
+    "@forge/bridge": "^7.4.0",
+    "@forge/llm": "^1.1.0",
+    "@forge/react": "^12.6.0",
+    "@forge/resolver": "^2.0.2",
+    "react": "^18.3.1"
+  }
+}

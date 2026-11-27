@@ -1,0 +1,30 @@
+name: Bug
+description: Something does not behave as the spec says
+labels: ["type:bug"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [core, ui, rules, ai, agents, permissions, validator, eval, demo, infra]
+    validations:
+      required: true
+  - type: textarea
+    id: happens
+    attributes:
+      label: What happens
+    validations:
+      required: true
+  - type: textarea
+    id: should
+    attributes:
+      label: What should happen (cite the spec if you can)
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: Site, environment (development/production), work item key, steps, and the invocation id from forge logs.
+    validations:
+      required: true

@@ -1,0 +1,64 @@
+name: deploy
+
+# Deploys the Forge app. Never runs on pull requests, so code from forks can't reach it.
+#   - every push to main            → development environment (the shared team site)
+#   - tag v* or manual dispatch     → production (the environment judges install from; spec 0010)
+# Needs repository secrets FORGE_EMAIL and FORGE_API_TOKEN (an Atlassian API token of the app owner) and the real
+# app id in manifest.yml (docs/SETUP.md). Until they exist, the job explains what is missing and succeeds.
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Forge environment
+        type: choice
+        options: [development, staging, production]
+        default: development
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      FORGE_EMAIL: ${{ secrets.FORGE_EMAIL }}
+      FORGE_API_TOKEN: ${{ secrets.FORGE_API_TOKEN }}
+      FORGE_DISABLE_ANALYTICS: "1"
+      ENVIRONMENT: ${{ inputs.environment || (startsWith(github.ref, 'refs/tags/v') && 'production') || 'development' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ready to deploy?
+        id: ready
+        run: |
+          if [ -z "$FORGE_EMAIL" ] || [ -z "$FORGE_API_TOKEN" ]; then
+            echo "::notice::FORGE_EMAIL / FORGE_API_TOKEN are not set; skipping deploy (docs/SETUP.md)."; echo "ok=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          if grep -q 'app/00000000-0000-0000-0000-000000000000' manifest.yml; then
+            echo "::notice::manifest.yml still has the placeholder app id; run forge register first (docs/SETUP.md)."; echo "ok=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          echo "ok=true" >> "$GITHUB_OUTPUT"
+      - uses: oven-sh/setup-bun@v2
+        if: steps.ready.outputs.ok == 'true'
+        with:
+          bun-version-file: package.json
+      - uses: actions/setup-node@v4
+        if: steps.ready.outputs.ok == 'true'
+        with:
+          node-version-file: .nvmrc
+      - if: steps.ready.outputs.ok == 'true'
+        run: bun install --frozen-lockfile && npm install -g @forge/cli@latest
+      - name: Forge lint
+        if: steps.ready.outputs.ok == 'true'
+        run: forge lint
+      - name: Deploy
+        if: steps.ready.outputs.ok == 'true'
+        run: forge deploy --non-interactive -e "$ENVIRONMENT"

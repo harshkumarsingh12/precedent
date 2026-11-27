@@ -1,0 +1,58 @@
+# Review routing. The last matching line wins.
+#
+#   Harsh Kumar Singh    @harshkumarsingh12  architecture, manifest, triggers/queues, core, actions + MCP, all UI, CI/CD
+#   Sristee Shrivastava  @srshriv            permissions, workflow validator, negative tests, fresh-install test
+#   Sikruti Mahapatra    @hoursgotviral-dev  sample workspace, agent rules export + SKILL.md, judge docs, video, Devpost
+#   Sumedha              @sumedhag28         capture, prompts, rule checkers, model judge, evaluation, Rovo agent prompt
+#
+# Owners here are the proposed split; Harsh confirms them when assigning issues. CODEOWNERS ignores people who are
+# not collaborators yet. Check with:
+#   gh api repos/harshkumarsingh12/precedent/collaborators --jq '.[].login'
+
+*                               @harshkumarsingh12
+
+# ── Platform, core and UI ─────────────────────────────────────────────
+/.github/                       @harshkumarsingh12
+/scripts/                       @harshkumarsingh12
+/manifest.yml                   @harshkumarsingh12
+/src/index.ts                   @harshkumarsingh12
+/src/resolver.ts                @harshkumarsingh12
+/src/triggers.ts                @harshkumarsingh12
+/src/core/                      @harshkumarsingh12
+/src/actions/                   @harshkumarsingh12
+/src/frontend/                  @harshkumarsingh12 @hoursgotviral-dev
+
+# The frozen contract: the core owner and the permissions owner review every change.
+/src/core/contract.ts           @harshkumarsingh12 @srshriv
+
+# ── Permissions and enforcement ───────────────────────────────────────
+/src/permissions/               @srshriv
+/src/guard/validator.ts         @srshriv
+/SECURITY.md                    @srshriv @harshkumarsingh12
+
+# ── Capture, rules and AI ─────────────────────────────────────────────
+/src/capture/                   @sumedhag28
+/src/rules/                     @sumedhag28
+/src/ai/                        @sumedhag28
+/src/agent/                     @sumedhag28
+/eval/                          @sumedhag28
+/docs/evals/                    @sumedhag28
+
+# ── Demo, agent rules and story ───────────────────────────────────────
+/src/seed/                      @hoursgotviral-dev
+/skills/                        @hoursgotviral-dev @harshkumarsingh12
+/docs/JUDGE_TESTING.md          @hoursgotviral-dev
+/docs/DEMO.md                   @hoursgotviral-dev
+/README.md                      @harshkumarsingh12 @hoursgotviral-dev
+
+# ── Specs: the owner of each area reviews its spec ───────────────────
+/docs/specs/0001-*              @harshkumarsingh12 @srshriv
+/docs/specs/0002-*              @harshkumarsingh12 @srshriv
+/docs/specs/0003-*              @sumedhag28
+/docs/specs/0004-*              @sumedhag28 @harshkumarsingh12
+/docs/specs/0005-*              @srshriv
+/docs/specs/0006-*              @harshkumarsingh12 @hoursgotviral-dev
+/docs/specs/0007-*              @srshriv
+/docs/specs/0008-*              @harshkumarsingh12
+/docs/specs/0009-*              @sumedhag28
+/docs/specs/0010-*              @hoursgotviral-dev
