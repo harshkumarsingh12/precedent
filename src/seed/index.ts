@@ -1,4 +1,4 @@
-import { NotImplementedError } from "../shared/errors.js";
+import { NotImplementedError } from "../shared/errors";
 
 export interface SeedResult {
   projectKey: string;

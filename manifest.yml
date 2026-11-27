@@ -3,8 +3,7 @@
 # upgrade prompt. Syntax marked "verify" is confirmed in the M1 spike; run `bun run manifest:check` and
 # `forge lint` after every change.
 app:
-  # Replaced by `forge register` (docs/SETUP.md). Do not commit someone else's app id.
-  id: ari:cloud:ecosystem::app/00000000-0000-0000-0000-000000000000
+  id: ari:cloud:ecosystem::app/f1c4358e-23a0-4cee-bd37-d478e27536d5
   runtime:
     name: nodejs22.x
   # verify: app.rovo metadata fields required for rovo:mcp from 5 January 2027 (spec 0006)
@@ -49,6 +48,7 @@ modules:
   jira:issuePanel:
     - key: precedent-panel
       title: Precedent
+      icon: resource:assets;icon.svg
       resource: panel-ui
       render: native
       resolver:
@@ -56,6 +56,7 @@ modules:
   jira:issueContext:
     - key: precedent-badge
       title: Precedent
+      label: Precedent
       resource: badge-ui
       render: native
       resolver:
@@ -90,14 +91,14 @@ modules:
     - key: on-issue-commented
       function: on-comment-event
       events: ["avi:jira:commented:issue"]
-  # verify: consumer syntax and time limits against the async events reference
+  # Consumer syntax validated by a development deploy (28 Nov). Time limits: verify in the M1 spike.
   consumer:
     - key: guard-consumer
       queue: guard-queue
-      function: guard-consumer
+      function: guard-worker
     - key: capture-consumer
       queue: capture-queue
-      function: capture-consumer
+      function: capture-worker
   rovo:agent:
     - key: precedent-agent
       name: Precedent
@@ -123,7 +124,7 @@ modules:
   action:
     - key: get-decisions
       name: Get decisions in scope
-      function: action-get-decisions
+      function: fn-get-decisions
       actionVerb: GET
       description: Returns the accepted decisions that apply to a project, component or repository. Call this before planning or writing code.
       inputs:
@@ -134,7 +135,7 @@ modules:
           description: A Jira project key, component name or repository slug.
     - key: check-proposal
       name: Check a proposal against decisions
-      function: action-check-proposal
+      function: fn-check-proposal
       actionVerb: GET
       description: Checks spec text or a unified diff against the accepted decisions in scope. Returns conflict, ok or inconclusive with both quotes. Advisory; Jira enforces on configured transitions.
       inputs:
@@ -155,7 +156,7 @@ modules:
           description: A unified diff to check.
     - key: record-decision
       name: Record a decision
-      function: action-record-decision
+      function: fn-record-decision
       actionVerb: CREATE
       description: Records a proposed decision. It becomes binding only after an approver confirms it in Jira.
       inputs:
@@ -176,7 +177,7 @@ modules:
           description: Why the team decided this.
     - key: export-agent-rules
       name: Export agent rules
-      function: action-export-agent-rules
+      function: fn-export-agent-rules
       actionVerb: GET
       description: Returns the approved decisions for a repository as a block between precedent markers, for AGENTS.md or .rovodev/.review-agent.md.
       inputs:
@@ -192,7 +193,7 @@ modules:
           description: agents_md (default) or rovodev_review.
     - key: explain-decision
       name: Explain a decision
-      function: action-explain-decision
+      function: fn-explain-decision
       actionVerb: GET
       description: Answers why the team decided something, with the decision, its owner, evidence and history.
       inputs:
@@ -212,21 +213,21 @@ modules:
       handler: index.onIssueEvent
     - key: on-comment-event
       handler: index.onCommentEvent
-    - key: guard-consumer
+    - key: guard-worker
       handler: index.guardConsumer
-    - key: capture-consumer
+    - key: capture-worker
       handler: index.captureConsumer
     - key: validate-transition
       handler: index.validateTransition
-    - key: action-get-decisions
+    - key: fn-get-decisions
       handler: index.actionGetDecisions
-    - key: action-check-proposal
+    - key: fn-check-proposal
       handler: index.actionCheckProposal
-    - key: action-record-decision
+    - key: fn-record-decision
       handler: index.actionRecordDecision
-    - key: action-export-agent-rules
+    - key: fn-export-agent-rules
       handler: index.actionExportAgentRules
-    - key: action-explain-decision
+    - key: fn-explain-decision
       handler: index.actionExplainDecision
 
 resources:
@@ -240,6 +241,8 @@ resources:
     path: src/frontend/setup/index.tsx
   - key: agent-prompt
     path: src/agent
+  - key: assets
+    path: src/assets
 
 permissions:
   scopes:

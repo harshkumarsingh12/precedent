@@ -18,15 +18,17 @@ surprises.
 
 ## Forge, once per person
 
-1. Create an Atlassian API token: <https://id.atlassian.com/manage/api-tokens>.
-2. `forge login` (use the token).
+1. Put Node 22 first in your PATH (Homebrew: `brew install node@22`, then add
+   `export PATH="/opt/homebrew/opt/node@22/bin:$PATH"` to `~/.zshrc`), then `npm i -g @forge/cli`.
+2. Create an API token at <https://go.atlassian.com/forge-cli-api-token>, then `forge login`.
 3. `forge site provision` to get a **demo site with Rovo**. Free developer sites can lack Rovo Chat; judges use
    demo sites. Confirm Rovo Chat opens.
 
 ## Forge, once for the team (Harsh)
 
-1. `forge register` in the repo root. It writes the real app id into `manifest.yml`; commit that in a PR
-   (`chore: register the forge app`). The deploy workflow skips while the placeholder id is present.
+1. ✅ Done 28 Nov: the app is registered in a Developer Space and its id is in `manifest.yml`.
+   `forge register` reformats the whole manifest; keep only the id change. Add teammates to the Developer Space so
+   they can deploy and read logs.
 2. Add repository secrets `FORGE_EMAIL` and `FORGE_API_TOKEN` (the app owner's). From then on every merge to
    `main` deploys to the **development** environment; a `v*` tag deploys **production**.
 3. Install on the shared development site: `forge install --site <site>.atlassian.net --product jira`.

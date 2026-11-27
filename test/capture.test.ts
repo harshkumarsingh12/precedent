@@ -1,6 +1,6 @@
 import { expect } from "vitest";
-import { ledger } from "./ledger.js";
-import { isDecisionCandidate } from "../src/capture/prefilter.js";
+import { ledger } from "./ledger";
+import { isDecisionCandidate } from "../src/capture/prefilter";
 
 // Spec 0003: capture.
 

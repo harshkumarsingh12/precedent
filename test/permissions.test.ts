@@ -1,7 +1,7 @@
 import { expect } from "vitest";
-import { ledger } from "./ledger.js";
-import { core } from "../src/core/index.js";
-import { restricted } from "./fixtures.js";
+import { ledger } from "./ledger";
+import { core } from "../src/core/index";
+import { restricted } from "./fixtures";
 
 // Spec 0007: a decision is never more visible than its source.
 

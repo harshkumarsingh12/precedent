@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { toCtx } from "./context.js";
+import { toCtx } from "./context";
 
 test("the acting user comes from the invocation context", () => {
   const ctx = toCtx({ principal: { accountId: "557058:abc" } }, "mcp", 1_700_000_000_000);

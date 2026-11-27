@@ -1,4 +1,4 @@
-import { NotImplementedError } from "../shared/errors.js";
+import { NotImplementedError } from "../shared/errors";
 
 /**
  * Rule-based pre-filter that runs before any model call (spec 0003): keep a comment only if it reads like a

@@ -1,6 +1,6 @@
 import Resolver from "@forge/resolver";
-import { core } from "./core/index.js";
-import { toCtx } from "./shared/context.js";
+import { core } from "./core/index";
+import { toCtx } from "./shared/context";
 
 /** Backend for the UI Kit screens (panel, badge, ledger, setup). Every call goes through core. */
 const resolver = new Resolver();

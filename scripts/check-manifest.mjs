@@ -12,6 +12,18 @@ const errors = [];
 const m = manifest.modules ?? {};
 
 const functions = new Map((m.function ?? []).map((f) => [f.key, f.handler]));
+
+// Module keys are unique across all module types, and function keys are at most 23 characters (forge lint).
+const seen = new Map();
+for (const [type, list] of Object.entries(m))
+  for (const mod of list ?? []) {
+    if (seen.has(mod.key))
+      errors.push(`duplicate module key '${mod.key}' (${seen.get(mod.key)} and ${type})`);
+    seen.set(mod.key, type);
+  }
+for (const key of functions.keys())
+  if (key.length > 23) errors.push(`function key '${key}' exceeds 23 characters`);
+
 for (const [key, handler] of functions) {
   const name = handler.replace(/^index\./, "");
   if (!new RegExp(`\\b${name}\\b`).test(index))

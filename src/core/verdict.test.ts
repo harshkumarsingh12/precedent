@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
-import type { CheckResult, Coverage } from "./contract.js";
-import { overallVerdict } from "./verdict.js";
+import type { CheckResult, Coverage } from "./contract";
+import { overallVerdict } from "./verdict";
 
 const ok = (id: string): CheckResult => ({ decisionId: id, verdict: "ok", method: "rule" });
 const full = (n: number): Coverage => ({ applicable: n, checked: n, unchecked: [] });

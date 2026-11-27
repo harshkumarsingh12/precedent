@@ -1,6 +1,6 @@
-import { core } from "../core/index.js";
-import { toCtx, type ForgeInvocationContext } from "../shared/context.js";
-import type { AgentRulesFormat } from "../core/contract.js";
+import { core } from "../core/index";
+import { toCtx, type ForgeInvocationContext } from "../shared/context";
+import type { AgentRulesFormat } from "../core/contract";
 
 /**
  * Rovo and MCP action handlers. Inputs are model-extracted and can be wrong: validate them, and never use them
