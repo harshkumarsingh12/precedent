@@ -6,14 +6,14 @@ every `ci` run.
 
 ## M0 Foundations (29 Nov)
 
-| Deliverable                                               | Owner           | Status |
-| --------------------------------------------------------- | --------------- | ------ |
-| Repo, CI/CD, branch protection, backlog                   | Harsh           | ✅     |
-| Specs 0001–0010 reviewed and Accepted                     | each spec owner |        |
-| Forge app registered; deploy secrets set                  | Harsh           |        |
-| Each person has a Forge demo site with Rovo               | everyone        |        |
-| Hello-world panel deployed to the shared development site | Harsh           |        |
-| Devpost team created; all four registered                 | Sikruti         |        |
+| Deliverable                                               | Owner           | Status                                                                                                                                                                                                                      |
+| --------------------------------------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Repo, CI/CD, branch protection, backlog                   | Harsh           | ✅                                                                                                                                                                                                                          |
+| Specs 0001–0010 reviewed and Accepted                     | each spec owner |                                                                                                                                                                                                                             |
+| Forge app registered; deploy secrets set                  | Harsh           | ✅ Registered, first deploy passed `forge lint` and is Runs-on-Atlassian eligible (#44); secrets in the `forge` environment (#45)                                                                                           |
+| Each person has a Forge demo site with Rovo               | everyone        | Harsh ✅ (`one-atlas-rlwl`, Rovo on, expires 25 Feb 2027); Sristee, Sikruti, Sumedha pending                                                                                                                                |
+| Hello-world panel deployed to the shared development site | Harsh           | ✅ 28 Nov on space PREC (company-managed, with a _Ready for agent_ status): issue panel, context badge ("Clear"), ledger and setup pages render; the Precedent Rovo agent is listed as _Recommended_ in Jira's agent picker |
+| Devpost team created; all four registered                 | Sikruti         |                                                                                                                                                                                                                             |
 
 **Done when:** specs Accepted, the panel renders on the shared site, CI green on `main`.
 
